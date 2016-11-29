@@ -1,0 +1,10 @@
+applications:
+- path: .
+  memory: 256M
+  instances: 1
+  domain: mybluemix.net
+  name: TQNQ
+  host: tqnq
+  disk_quota: 1024M
+  env:
+    redacted_message: '[PRIVATE DATA HIDDEN]'
