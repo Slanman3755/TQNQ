@@ -11,11 +11,15 @@ body,html {
 	text-align: center;
 }
 
+.board-container {
+	padding-top: 20px;
+}
+
 .board {
 	border-spacing: 0;
 	border-collapse: collapse;
-	height: 500px;
-	width: 500px;
+	height: 43vw;
+	width: 43vw;
 }
 
 .board.done {
@@ -24,8 +28,8 @@ body,html {
 
 .cell {
 	border: solid 1px #000;
-	height: 100px;
-	width: 100px;
+	height: 8vw;
+	width: 8vw;
 	background: #FFF;
 	padding: 0;
 }
@@ -43,8 +47,8 @@ body,html {
 }
 
 .queen {
-	height: 96px;
-	width: 96px;
+	height: 7vw;
+	width: 7vw;
 }
 
 .cell.selected .queen{
@@ -62,16 +66,16 @@ body,html {
 
 .dot {
 	content: url("../images/dot.png");
-	height: 96px;
-	width: 96px;
+	height: 7vw;
+	width: 7vw;
 }
 
 .turn {
 	text-align: center;
     padding: 20px;
-    font-size: 45px;
+    font-size: 36px;
 }
 
 .restart {
-	font-size: 20px;
+	font-size: 16px;
 }
