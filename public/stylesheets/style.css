@@ -8,6 +8,7 @@ body,html {
 	margin: 0 auto;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 	color: #ffffff;
+	text-align: center;
 }
 
 .board {
@@ -15,6 +16,10 @@ body,html {
 	border-collapse: collapse;
 	height: 500px;
 	width: 500px;
+}
+
+.board.done {
+	filter: brightness(50%);
 }
 
 .cell {
@@ -59,4 +64,14 @@ body,html {
 	content: url("../images/dot.png");
 	height: 96px;
 	width: 96px;
+}
+
+.turn {
+	text-align: center;
+    padding: 20px;
+    font-size: 45px;
+}
+
+.restart {
+	font-size: 20px;
 }

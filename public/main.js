@@ -1,14 +1,16 @@
-E = 0;
-R = 1;
-B = 2;
-D = 3;
-var board = [
+E = 3;
+R = 0;
+B = 1;
+D = 2;
+board = [
 		[R, B, R, B, R],
 		[E, E, E, E, E],
 		[R, E, E, E, B],
 		[E, E, E, E, E],
 		[B, R, B, R, B]
 	];
+turn = R;
+win = E;
 
 var select = function(cell) {
 	$('.cell').removeClass('selected');
@@ -61,14 +63,14 @@ var select = function(cell) {
 
 var move = function(cell) {
 	var id = $(cell).prop('id');
-	var newRow = parseInt(id.charAt(1)) - 1;
-	var newCol = id.charCodeAt(0) - 97;
+	var row = parseInt(id.charAt(1)) - 1;
+	var col = id.charCodeAt(0) - 97;
 
 	id = $('.selected').prop('id');
 	var oldRow = parseInt(id.charAt(1)) - 1;
 	var oldCol = id.charCodeAt(0) - 97;
 
-	board[newRow][newCol] = board[oldRow][oldCol];
+	board[row][col] = board[oldRow][oldCol];
 	board[oldRow][oldCol] = E;
 
 	$('.cell').removeClass('selected');
@@ -78,6 +80,45 @@ var move = function(cell) {
 			if (board[i][j] == D) board[i][j] = E;
 		}
 	}
+
+	var color = board[row][col];
+	var score = [1, 1, 1, 1];
+
+	for (var i = 1; (row + i) < 5 && (col + i) < 5 && board[row + i][col + i] == color; i++) {
+		score[0]++;
+	}
+
+	for (var i = 1; (row + i) < 5 && board[row + i][col] == color; i++) {
+		score[1]++;
+	}
+
+	for (var i = 1; (row + i) < 5 && (col - i) >= 0 && board[row + i][col - i] == color; i++) {
+		score[2]++;
+	}
+
+	for (var i = 1; (col + i) < 5 &&  board[row][col + i] == color; i++) {
+		score[3]++;
+	}
+
+	for (var i = 1; (col - i) >= 0 && board[row][col - i] == color; i++) {
+		score[3]++;
+	}
+
+	for (var i = 1; (row - i) >= 0 && (col + i) < 5 && board[row - i][col + i] == color; i++) {
+		score[2]++;
+	}
+
+	for (var i = 1; (row - i) >= 0 && board[row - i][col] == color; i++) {
+		score[1]++;
+	}
+
+	for (var i = 1; (row - i) >= 0 && (col - i) >= 0 && board[row - i][col - i] == color; i++) {
+		score[0]++;
+	}
+
+	if (score[0] > 3 || score[1] > 3 || score[2] > 3 || score[3] > 3) win = color;
+
+	turn = !turn;
 
 	drawBoard();
 }
@@ -108,14 +149,34 @@ var drawBoard = function() {
 		}
 	}
 
+	if (win != E) {
+		$('.turn').text(win ? "Black Wins!" : "Red Wins!");
+		$('.board').addClass('done');
+	} else {
+		$('.turn').text(turn ? "Black's Turn" : "Red's Turn");
 
-	$('.queen').click(function(e) {
-		select(e.target.parentElement);
-	});
+		$('.queen#' + (turn ? 'black' : 'red')).click(function(e) {
+			select(e.target.parentElement);
+		});
 
-	$('.dot').click(function(e) {
-		move(e.target.parentElement);
-	});
+		$('.dot').click(function(e) {
+			move(e.target.parentElement);
+		});
+	}
 }
+
+$('.restart').click(function() {
+	board = [
+		[R, B, R, B, R],
+		[E, E, E, E, E],
+		[R, E, E, E, B],
+		[E, E, E, E, E],
+		[B, R, B, R, B]
+	];
+	win = E;
+	turn = R;
+	$('.board').removeClass('done');
+	drawBoard();
+});
 
 drawBoard();
