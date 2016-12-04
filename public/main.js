@@ -176,6 +176,7 @@ $('.restart').click(function() {
 	win = E;
 	turn = R;
 	$('.board').removeClass('done');
+	$('.cell').removeClass('selected');
 	drawBoard();
 });
 
