@@ -14,6 +14,7 @@ win = E;
 socket = null;
 game = 0;
 userColor = R;
+userName = Math.random().toString(36).substring(7);
 
 var select = function(cell) {
 	$('.cell').removeClass('selected');
@@ -97,7 +98,7 @@ var move = function(cell) {
 var drawBoard = function() {
 	$('.queen').remove();
 	$('.dot').remove();
-
+    $('.usrName').text(userName);
 	var dot = '<img class="dot">';
 	var redQueen = '<img class="queen" id="red">';
 	var blackQueen = '<img class="queen" id="black">';
@@ -160,7 +161,7 @@ socket = io.connect();
 
 socket.on('con', function(data) {
     restart();
-    socket.emit('restart', {game: game, color: userColor});
+    socket.emit('restart', {game: game, color: userColor, usr: userName});
 });
 
 socket.on('update', function(data) {

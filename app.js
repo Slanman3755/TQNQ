@@ -45,6 +45,7 @@ io.sockets.on('connection', function (socket) {
 			];
 		games[data.game].win = E;
 		games[data.game].turn = R;
+		games[data.game].userName = data.usr;
 
 		if (data.color == R) games[data.game].red = this.id;
 		else games[data.game].black = this.id;
