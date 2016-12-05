@@ -11,6 +11,7 @@ board = [
 	];
 turn = R;
 win = E;
+socket = null;
 
 var select = function(cell) {
 	$('.cell').removeClass('selected');
@@ -178,8 +179,18 @@ $('.restart').click(function() {
 	$('.board').removeClass('done');
 	$('.cell').removeClass('selected');
 	drawBoard();
+	socket.emit('newGame', 1);
 });
 
 drawBoard();
 
-var socket = io.connect();
+socket = io.connect();
+socket.on('connected', function(data) {
+	console.log('connected');
+});
+
+socket.on('newGame', function(data) {
+	console.log('new game');
+});
+
+socket.emit('newGame', 1);

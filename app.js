@@ -4,12 +4,7 @@
 // node.js starter application for Bluemix
 //------------------------------------------------------------------------------
 
-// This application uses express as its web server
-// for more info, see: http://expressjs.com
 var express = require('express');
-
-// cfenv provides access to your Cloud Foundry environment
-// for more info, see: https://www.npmjs.com/package/cfenv
 var cfenv = require('cfenv');
 
 // create a new express server
@@ -22,13 +17,15 @@ app.use(express.static(__dirname + '/public'));
 var appEnv = cfenv.getAppEnv();
 
 // start server on the specified port and binding host
-var server = app.listen(appEnv.port, '0.0.0.0', function() {
-  // print a message when the server starts listening
-  console.log("server starting on " + appEnv.url);
-});
+var server = require('http').createServer(app);
+var io = (require('socket.io'))(server);
 
-var io = require('socket.io').listen(server);
 
 io.sockets.on('connection', function (socket) {
-    //init
+	console.log('Connected');
+	socket.on('newGame', function (data) {
+    	console.log('New Game');
+	});
 });
+
+server.listen(appEnv.port);
