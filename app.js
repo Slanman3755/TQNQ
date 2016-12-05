@@ -33,6 +33,7 @@ io.sockets.on('connection', function (socket) {
     socket.emit('con', 0);
 
     socket.on('createGame', function (data) {
+    	console.log('Game Created');
     	var id = nextId;
     	nextId++;
     	games[id] = {};
@@ -55,6 +56,8 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('joinGame', function (data) {
+    	console.log('Game Joined');
+
     	if (!games[data.game]) {
     		return;
     	}

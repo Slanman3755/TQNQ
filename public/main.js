@@ -71,7 +71,7 @@ var update = function(game) {
 	win = game.win;
 	turn = game.turn;
     redName = game.redName;
-    blackName = game.blackName;
+    blackName = game.blackName ? game.blackName : "Waiting...";
 	drawBoard();
 }
 
@@ -170,10 +170,11 @@ drawBoard();
 socket = io.connect();
 
 var qs = getUrlVars();
-var id = qs["gameid"];
+var id = qs["id"];
 var name = qs["name"];
 if (id) {
 	userColor = B;
+	game = id;
 	socket.emit('joinGame', {game: id, name: name});
 } else {
 	userColor = R;
