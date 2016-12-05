@@ -82,6 +82,21 @@ body,html {
     font-size: 36px;
 }
 
+.gameID {
+	text-align: center;
+    padding-top: 10px;
+    font-size: 36px;
+}
+.redName {
+	text-align: center;
+    padding-top: 10px;
+    font-size: 36px;
+}
+.blackName {
+	text-align: center;
+    padding-top: 10px;
+    font-size: 36px;
+}
 .restart, .color {
 	text-align: center;
 	font-size: 16px;

@@ -14,7 +14,8 @@ win = E;
 socket = null;
 game = 0;
 userColor = R;
-userName = Math.random().toString(36).substring(7);
+redName = "";
+blackName = "";
 
 var select = function(cell) {
 	$('.cell').removeClass('selected');
@@ -69,7 +70,8 @@ var update = function(game) {
 	board = game.board;
 	win = game.win;
 	turn = game.turn;
-
+    redName = game.redName;
+    blackName = game.blackName;
 	drawBoard();
 }
 
@@ -96,6 +98,9 @@ var move = function(cell) {
 }
 
 var drawBoard = function() {
+    $('.gameID').text("Game ID: " + game);
+    $('.redName').text("Red Player: " + redName);
+    $('.blackName').text("Black Player: " + redName);
 	$('.queen').remove();
 	$('.dot').remove();
     $('.usrName').text(userName);
