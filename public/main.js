@@ -12,6 +12,8 @@ board = [
 turn = R;
 win = E;
 socket = null;
+game = 0;
+userColor = R;
 
 var select = function(cell) {
 	$('.cell').removeClass('selected');
@@ -62,25 +64,9 @@ var select = function(cell) {
 	drawBoard();
 }
 
-var move = function(cell) {
-	var id = $(cell).prop('id');
-	var row = parseInt(id.charAt(1)) - 1;
-	var col = id.charCodeAt(0) - 97;
-
-	id = $('.selected').prop('id');
-	var oldRow = parseInt(id.charAt(1)) - 1;
-	var oldCol = id.charCodeAt(0) - 97;
-
+var move = function(row, col, oldRow, oldCol) {
 	board[row][col] = board[oldRow][oldCol];
 	board[oldRow][oldCol] = E;
-
-	$('.cell').removeClass('selected');
-
-	for (var i = 0; i < 5; i++) {
-		for (var j = 0; j < 5; j++) {
-			if (board[i][j] == D) board[i][j] = E;
-		}
-	}
 
 	var color = board[row][col];
 	var score = [1, 1, 1, 1];
@@ -124,6 +110,28 @@ var move = function(cell) {
 	drawBoard();
 }
 
+var userMove = function(cell) {
+	var id = $(cell).prop('id');
+	var row = parseInt(id.charAt(1)) - 1;
+	var col = id.charCodeAt(0) - 97;
+
+	id = $('.selected').prop('id');
+	var oldRow = parseInt(id.charAt(1)) - 1;
+	var oldCol = id.charCodeAt(0) - 97;
+
+	$('.cell').removeClass('selected');
+
+	for (var i = 0; i < 5; i++) {
+		for (var j = 0; j < 5; j++) {
+			if (board[i][j] == D) board[i][j] = E;
+		}
+	}
+
+	move(row, col, oldRow, oldCol);
+
+	socket.emit('move', {row: row, col: col, oldRow: oldRow, oldCol: oldCol, game: game, color: userColor});
+}
+
 var drawBoard = function() {
 	$('.queen').remove();
 	$('.dot').remove();
@@ -156,17 +164,19 @@ var drawBoard = function() {
 	} else {
 		$('.turn').text(turn ? "Black's Turn" : "Red's Turn");
 
-		$('.queen#' + (turn ? 'black' : 'red')).click(function(e) {
-			select(e.target.parentElement);
-		});
+		if (userColor == turn) {
+			$('.queen#' + (turn ? 'black' : 'red')).click(function(e) {
+				select(e.target.parentElement);
+			});
 
-		$('.dot').click(function(e) {
-			move(e.target.parentElement);
-		});
+			$('.dot').click(function(e) {
+				userMove(e.target.parentElement);
+			});
+		}
 	}
 }
 
-$('.restart').click(function() {
+var restart = function() {
 	board = [
 		[R, B, R, B, R],
 		[E, E, E, E, E],
@@ -179,18 +189,19 @@ $('.restart').click(function() {
 	$('.board').removeClass('done');
 	$('.cell').removeClass('selected');
 	drawBoard();
-	socket.emit('newGame', 1);
+}
+
+$('.restart').click(function() {
+	restart();
+	socket.emit('restart', {game: game, color: userColor});
 });
 
 drawBoard();
 
 socket = io.connect();
-socket.on('connected', function(data) {
-	console.log('connected');
+
+socket.on('move', function(data) {
+	move(data.row, data.col, data.oldRow, data.oldCol);
 });
 
-socket.on('newGame', function(data) {
-	console.log('new game');
-});
-
-socket.emit('newGame', 1);
+setTimeout(function(){socket.emit('restart', {game: game, color: userColor});}, 1000);
