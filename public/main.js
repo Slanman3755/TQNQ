@@ -141,18 +141,8 @@ var drawBoard = function() {
 }
 
 var restart = function() {
-	board = [
-		[R, B, R, B, R],
-		[E, E, E, E, E],
-		[R, E, E, E, B],
-		[E, E, E, E, E],
-		[B, R, B, R, B]
-	];
-	win = E;
-	turn = R;
 	$('.board').removeClass('done');
 	$('.cell').removeClass('selected');
-	drawBoard();
 }
 
 $('.restart').click(function() {

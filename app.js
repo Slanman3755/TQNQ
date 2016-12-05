@@ -31,25 +31,27 @@ io.sockets.on('connection', function (socket) {
     socket.emit('con', 0);
 	socket.on('restart', function (data) {
     	console.log('Restart');
-
+    	
 		if (!games[data.game]) {
 			games[data.game] = {};
-			games[data.game].board = [
+		}
+
+		games[data.game].board = [
 				[R, B, R, B, R],
 				[E, E, E, E, E],
 				[R, E, E, E, B],
 				[E, E, E, E, E],
 				[B, R, B, R, B]
 			];
-			games[data.game].win = E;
-			games[data.game].turn = R;
-		}
+		games[data.game].win = E;
+		games[data.game].turn = R;
 
 		if (data.color == R) games[data.game].red = this.id;
 		else games[data.game].black = this.id;
 
 		this.join(data.game);
 		io.to(data.game).emit('restart');
+		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
 	});
 
 	socket.on('move', function (data) {
