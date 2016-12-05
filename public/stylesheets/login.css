@@ -14,7 +14,11 @@ button {
     margin: 8px 0;
     border: none;
     cursor: pointer;
-    width: 100%;
+    width: 100px;
+}
+
+input {
+    height: 37px;
 }
 
 .welcome {
@@ -22,7 +26,6 @@ button {
     padding-top: 30px;
     padding-bottom: 30px;
     font-size: 36px;
-    color: #F33
 }
 .howto{
     text-align: center;
@@ -83,9 +86,6 @@ button {
     text-align: left;
     color: black;
 }
-
-.bloc { display:inline-block; vertical-align:top; overflow:hidden; border:solid grey 1px; }
-.bloc select { padding:10px; margin:-5px -20px -5px -5px; }
 
 .p {
 	font-size: 18px;

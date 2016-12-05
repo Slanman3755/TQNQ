@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>All Queens</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="stylesheets/style.css">
+  </head>
+
+  <body>
+    <div class="board-container">
+      <table class="board" align="center">
+        <tr>
+          <td class="cell red" id="a5">
+          </td>
+          <td class="cell black" id="b5">
+          </td>
+          <td class="cell red" id="c5">
+          </td>
+          <td class="cell black" id="d5">
+          </td>
+          <td class="cell red" id="e5">
+          </td>
+        </tr>
+        <tr>
+          <td class="cell" id="a4">
+          </td>
+          <td class="cell" id="b4">
+          </td>
+          <td class="cell" id="c4">
+          </td>
+          <td class="cell" id="d4">
+          </td>
+          <td class="cell" id="e4">
+          </td>
+        </tr>
+        <tr>
+          <td class="cell black" id="a3">
+          </td>
+          <td class="cell" id="b3">
+          </td>
+          <td class="cell" id="c3">
+          </td>
+          <td class="cell" id="d3">
+          </td>
+          <td class="cell red" id="e3">
+          </td>
+        </tr>
+        <tr>
+          <td class="cell" id="a2">
+          </td>
+          <td class="cell" id="b2">
+          </td>
+          <td class="cell" id="c2">
+          </td>
+          <td class="cell" id="d2">
+          </td>
+          <td class="cell" id="e2">
+          </td>
+        </tr>
+        <tr>
+          <td class="cell black" id="a1">
+          </td>
+          <td class="cell red" id="b1">
+          </td>
+          <td class="cell black" id="c1">
+          </td>
+          <td class="cell red" id="d1">
+          </td>
+          <td class="cell black" id="e1">
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="turn"></div>
+    <div class="color"></div>
+    <div class="restart">Restart</div>
+
+    <script type="text/javascript" src="libs/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="libs/lodash.js"></script>
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </body>
+
+</html>
