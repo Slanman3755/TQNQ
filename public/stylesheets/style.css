@@ -73,29 +73,23 @@ body,html {
 .turn {
 	text-align: center;
     padding-top: 10px;
-    font-size: 36px;
-}
-
-.usrName {
-	text-align: center;
-    padding-top: 10px;
-    font-size: 36px;
+    font-size: 24px;
 }
 
 .gameID {
 	text-align: center;
     padding-top: 10px;
-    font-size: 36px;
+    font-size: 24px;
 }
 .redName {
 	text-align: center;
     padding-top: 10px;
-    font-size: 36px;
+    font-size: 24px;
 }
 .blackName {
 	text-align: center;
     padding-top: 10px;
-    font-size: 36px;
+    font-size: 24px;
 }
 .restart, .color {
 	text-align: center;
