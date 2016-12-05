@@ -12,8 +12,8 @@ board = [
 turn = R;
 win = E;
 socket = null;
-game = 0;
-userColor = R;
+game = null;
+userColor = B;
 redName = "";
 blackName = "";
 
@@ -94,16 +94,15 @@ var move = function(cell) {
 
 	drawBoard();
 
-	socket.emit('move', {row: row, col: col, oldRow: oldRow, oldCol: oldCol, game: game, color: userColor});
+	socket.emit('move', {row: row, col: col, oldRow: oldRow, oldCol: oldCol, game: game});
 }
 
 var drawBoard = function() {
     $('.gameID').text("Game ID: " + game);
     $('.redName').text("Red Player: " + redName);
-    $('.blackName').text("Black Player: " + redName);
+    $('.blackName').text("Black Player: " + blackName);
 	$('.queen').remove();
 	$('.dot').remove();
-    $('.usrName').text(userName);
 	var dot = '<img class="dot">';
 	var redQueen = '<img class="queen" id="red">';
 	var blackQueen = '<img class="queen" id="black">';
@@ -125,8 +124,6 @@ var drawBoard = function() {
 			if (image) $('.cell#' + String.fromCharCode(j + 97) + (i + 1)).append(image);
 		}
 	}
-
-	$('.color').text(userColor ? "You are black" : "You are red");
 
 	if (win != E) {
 		$('.turn').text(win ? "Black Wins!" : "Red Wins!");
@@ -151,22 +148,41 @@ var restart = function() {
 	$('.cell').removeClass('selected');
 }
 
-$('.restart').click(function() {
-	socket.emit('restart', {game: game, color: userColor});
-});
+function getUrlVars()
+{
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
 
-$('.color').click(function() {
-	userColor = userColor == R ? B : R;
-	socket.emit('restart', {game: game, color: userColor});
+$('.restart').click(function() {
+	socket.emit('restart', {game: game});
 });
 
 drawBoard();
 
 socket = io.connect();
 
-socket.on('con', function(data) {
-    restart();
-    socket.emit('restart', {game: game, color: userColor, usr: userName});
+var qs = getUrlVars();
+var id = qs["gameid"];
+var name = qs["name"];
+if (id) {
+	userColor = B;
+	socket.emit('joinGame', {game: id, name: name});
+} else {
+	userColor = R;
+	socket.emit('createGame', {name: name});
+}
+
+socket.on('newGame', function(data) {
+	game = data;
+	userColor = R;
 });
 
 socket.on('update', function(data) {

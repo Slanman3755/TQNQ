@@ -24,17 +24,55 @@ E = 3;
 R = 0;
 B = 1;
 
+nextId = 0
 games = [];
 
 io.sockets.on('connection', function (socket) {
 	console.log('Connected');
+
     socket.emit('con', 0);
+
+    socket.on('createGame', function (data) {
+    	var id = nextId;
+    	nextId++;
+    	games[id] = {};
+    	games[id].board = [
+				[R, B, R, B, R],
+				[E, E, E, E, E],
+				[R, E, E, E, B],
+				[E, E, E, E, E],
+				[B, R, B, R, B]
+			];
+		games[id].win = E;
+		games[id].turn = R;
+
+		games[id].red = this.id;
+		games[id].redName = data.name;
+
+		this.join(id);
+		this.emit('newGame', id);
+		io.to(id).emit('update', {board: games[id].board, turn: games[id].turn, win: games[id].win, redName: games[id].redName});
+    });
+
+    socket.on('joinGame', function (data) {
+    	if (!games[data.game]) {
+    		return;
+    	}
+
+    	if (games[data.game].black) {
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
+    		return;
+    	}
+
+		games[data.game].black = this.id;
+		games[data.game].blackName = data.name;
+
+		this.join(data.game);
+		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
+    });
+
 	socket.on('restart', function (data) {
     	console.log('Restart');
-    	
-		if (!games[data.game]) {
-			games[data.game] = {};
-		}
 
 		games[data.game].board = [
 				[R, B, R, B, R],
@@ -45,14 +83,9 @@ io.sockets.on('connection', function (socket) {
 			];
 		games[data.game].win = E;
 		games[data.game].turn = R;
-		games[data.game].userName = data.usr;
 
-		if (data.color == R) games[data.game].red = this.id;
-		else games[data.game].black = this.id;
-
-		this.join(data.game);
 		io.to(data.game).emit('restart');
-		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
 	});
 
 	socket.on('move', function (data) {
@@ -60,7 +93,7 @@ io.sockets.on('connection', function (socket) {
 
     	if (this.id != (games[data.game].turn == R ? games[data.game].red : games[data.game].black)) {
     		console.log('Invalid Player');
-    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
     		return;
     	}
 
@@ -73,7 +106,7 @@ io.sockets.on('connection', function (socket) {
 
     	if (board[oldRow][oldCol] != games[data.game].turn) {
     		console.log('Invalid Piece');
-    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
     		return;
     	}
 
@@ -113,7 +146,7 @@ io.sockets.on('connection', function (socket) {
 
 		if (!check) {
     		console.log('Invalid Move');
-    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
     		return;
     	}
 
@@ -159,7 +192,7 @@ io.sockets.on('connection', function (socket) {
 
 		games[data.game].turn = games[data.game].turn == R ? B : R;
 
-		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
 	});
 });
 
