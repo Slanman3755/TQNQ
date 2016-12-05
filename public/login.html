@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="stylesheets/login.css">
+</head>
+
+
+<body>
+    <div class="turn"></div>
+    <a class="welcome">Hello, This is All Queens</a>
+    <div><button button onclick="document.getElementById('id01').style.display='block'" class="redbtn">How to play</button></div>
+    <div class="username">
+        <label><b>1. Pick a username</b></label>
+        <input type="text" placeholder="Enter Username" name="uname" required>
+    </div>
+    <div class="username">2. Join or create a lobby</div>
+    <div> <button type="greenbtn">Join</button>
+        <button type="greenbtn">Create</button></div>
+    <div class="bloc">
+        <select size = "3">
+            <option>Option 1</option>
+            <option>Option 2</option>
+            <option>Option 3</option>
+        </select>
+    </div>
+    <div id="id01" class="modal">
+        <form class="modal-content animate">
+            <a class="welcome">How to Play All Queens</a>
+            <div class ="instructions">
+                <ul style="list-style: none;">
+                    <li>Think of it as four-in-a-row chess.</li>
+                    <li>Queen can move any number of squares vertically, horizontally, or diagonally.</li>
+                    <li>Pieces can’t be captured.</li>
+                    <li>You win when you get four of your queens in a line - vertically, horizontally, or diagonally.</li>
+                </ul>
+            </div>
+            <div><button type="button" onclick="document.getElementById('id01').style.display='none'" class="redbtn">Close</button></div>
+        </form>
+    </div>
+
+</body>
+</html>
