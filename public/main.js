@@ -127,7 +127,7 @@ var userMove = function(cell) {
 		}
 	}
 
-	move(row, col, oldRow, oldCol);
+	drawBoard();
 
 	socket.emit('move', {row: row, col: col, oldRow: oldRow, oldCol: oldCol, game: game, color: userColor});
 }

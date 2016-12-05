@@ -23,33 +23,38 @@ var io = (require('socket.io'))(server);
 E = 3;
 R = 0;
 B = 1;
-turn = [];
-win = [];
-boards = [];
-players = [[]];
+
+games = [];
 
 io.sockets.on('connection', function (socket) {
 	console.log('Connected');
 
 	socket.on('restart', function (data) {
     	console.log('Restart');
-    	boards[data.game] = [
-			[R, B, R, B, R],
-			[E, E, E, E, E],
-			[R, E, E, E, B],
-			[E, E, E, E, E],
-			[B, R, B, R, B]
-		];
-		win[data.game] = E;
-		turn[data.game] = R;
-		players[data.game][data.color] = this.id;
-		console.log(players);
+
+		if (!games[data.game]) {
+			games[data.game] = [];
+			games[data.game].board = [
+				[R, B, R, B, R],
+				[E, E, E, E, E],
+				[R, E, E, E, B],
+				[E, E, E, E, E],
+				[B, R, B, R, B]
+			];
+			games[data.game].win = E;
+			games[data.game].turn = R;
+		}
+
+		if (data.color == R) games[data.game].red = this.id;
+		else games[data.game].black = this.id;
+
+		this.join(data.game);
 	});
 
 	socket.on('move', function (data) {
     	console.log('Move');
 
-    	var board = boards[data.game];
+    	var board = games[data.game].board;
 
     	var row = data.row;
     	var col = data.col;
@@ -92,18 +97,11 @@ io.sockets.on('connection', function (socket) {
 			score[0]++;
 		}
 
-		if (score[0] > 3 || score[1] > 3 || score[2] > 3 || score[3] > 3) win = color;
+		if (score[0] > 3 || score[1] > 3 || score[2] > 3 || score[3] > 3) games[data.game].win = color;
 
-		turn = turn == 1 ? 0 : 1;
+		games[data.game].turn = games[data.game].turn == 1 ? 0 : 1;
 
-		console.log(io.sockets.connected);
-		console.log(players);
-		console.log(data.game);
-		console.log(turn);
-		console.log(players[data.game][turn]);
-		console.log(players[0][0]);
-
-		io.sockets.connected[players[data.game][turn]].emit('move', data);
+		io.to(data.game).emit('move', data);
 	});
 });
 
