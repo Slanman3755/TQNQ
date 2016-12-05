@@ -120,6 +120,8 @@ var drawBoard = function() {
 		}
 	}
 
+	$('.color').text(userColor ? "You are black" : "You are red");
+
 	if (win != E) {
 		$('.turn').text(win ? "Black Wins!" : "Red Wins!");
 		$('.board').addClass('done');
@@ -154,17 +156,27 @@ var restart = function() {
 }
 
 $('.restart').click(function() {
-	restart();
+	socket.emit('restart', {game: game, color: userColor});
+});
+
+$('.color').click(function() {
+	userColor = userColor == R ? B : R;
 	socket.emit('restart', {game: game, color: userColor});
 });
 
 drawBoard();
 
 socket = io.connect();
+
 socket.on('con', function(data) {
     restart();
     socket.emit('restart', {game: game, color: userColor});
 });
+
 socket.on('update', function(data) {
 	update(data);
+});
+
+socket.on('restart', function(data) {
+	restart();
 });

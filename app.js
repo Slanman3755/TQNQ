@@ -49,6 +49,7 @@ io.sockets.on('connection', function (socket) {
 		else games[data.game].black = this.id;
 
 		this.join(data.game);
+		io.to(data.game).emit('restart');
 	});
 
 	socket.on('move', function (data) {

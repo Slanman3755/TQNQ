@@ -72,10 +72,12 @@ body,html {
 
 .turn {
 	text-align: center;
-    padding: 20px;
+    padding-top: 10px;
     font-size: 36px;
 }
 
-.restart {
+.restart, .color {
+	text-align: center;
 	font-size: 16px;
+	padding-top: 5px;
 }
