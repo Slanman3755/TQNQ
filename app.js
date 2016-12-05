@@ -62,6 +62,8 @@ io.sockets.on('connection', function (socket) {
     		return;
     	}
 
+    	this.join(data.game);
+
     	if (games[data.game].black) {
     		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
     		return;
@@ -69,8 +71,7 @@ io.sockets.on('connection', function (socket) {
 
 		games[data.game].black = this.id;
 		games[data.game].blackName = data.name;
-
-		this.join(data.game);
+		
 		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win, redName: games[data.game].redName, blackName: games[data.game].blackName});
     });
 
