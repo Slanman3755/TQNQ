@@ -64,53 +64,15 @@ var select = function(cell) {
 	drawBoard();
 }
 
-var move = function(row, col, oldRow, oldCol) {
-	board[row][col] = board[oldRow][oldCol];
-	board[oldRow][oldCol] = E;
-
-	var color = board[row][col];
-	var score = [1, 1, 1, 1];
-
-	for (var i = 1; (row + i) < 5 && (col + i) < 5 && board[row + i][col + i] == color; i++) {
-		score[0]++;
-	}
-
-	for (var i = 1; (row + i) < 5 && board[row + i][col] == color; i++) {
-		score[1]++;
-	}
-
-	for (var i = 1; (row + i) < 5 && (col - i) >= 0 && board[row + i][col - i] == color; i++) {
-		score[2]++;
-	}
-
-	for (var i = 1; (col + i) < 5 &&  board[row][col + i] == color; i++) {
-		score[3]++;
-	}
-
-	for (var i = 1; (col - i) >= 0 && board[row][col - i] == color; i++) {
-		score[3]++;
-	}
-
-	for (var i = 1; (row - i) >= 0 && (col + i) < 5 && board[row - i][col + i] == color; i++) {
-		score[2]++;
-	}
-
-	for (var i = 1; (row - i) >= 0 && board[row - i][col] == color; i++) {
-		score[1]++;
-	}
-
-	for (var i = 1; (row - i) >= 0 && (col - i) >= 0 && board[row - i][col - i] == color; i++) {
-		score[0]++;
-	}
-
-	if (score[0] > 3 || score[1] > 3 || score[2] > 3 || score[3] > 3) win = color;
-
-	turn = !turn;
+var update = function(game) {
+	board = game.board;
+	win = game.win;
+	turn = game.turn;
 
 	drawBoard();
 }
 
-var userMove = function(cell) {
+var move = function(cell) {
 	var id = $(cell).prop('id');
 	var row = parseInt(id.charAt(1)) - 1;
 	var col = id.charCodeAt(0) - 97;
@@ -170,7 +132,7 @@ var drawBoard = function() {
 			});
 
 			$('.dot').click(function(e) {
-				userMove(e.target.parentElement);
+				move(e.target.parentElement);
 			});
 		}
 	}
@@ -200,8 +162,6 @@ drawBoard();
 
 socket = io.connect();
 
-socket.on('move', function(data) {
-	move(data.row, data.col, data.oldRow, data.oldCol);
+socket.on('update', function(data) {
+	update(data);
 });
-
-setTimeout(function(){socket.emit('restart', {game: game, color: userColor});}, 1000);

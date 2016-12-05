@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) {
     	console.log('Restart');
 
 		if (!games[data.game]) {
-			games[data.game] = [];
+			games[data.game] = {};
 			games[data.game].board = [
 				[R, B, R, B, R],
 				[E, E, E, E, E],
@@ -53,6 +53,12 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('move', function (data) {
     	console.log('Move');
+    	
+    	if (this.id != (games[data.game].turn == R ? games[data.game].red : games[data.game].black )) {
+    		console.log('Invalid');
+    		io.to(data.game).emit('update', games[data.game]);
+    		return;
+    	}
 
     	var board = games[data.game].board;
 
@@ -99,9 +105,9 @@ io.sockets.on('connection', function (socket) {
 
 		if (score[0] > 3 || score[1] > 3 || score[2] > 3 || score[3] > 3) games[data.game].win = color;
 
-		games[data.game].turn = games[data.game].turn == 1 ? 0 : 1;
+		games[data.game].turn = games[data.game].turn == R ? B : R;
 
-		io.to(data.game).emit('move', data);
+		io.to(data.game).emit('update', games[data.game]);
 	});
 });
 
