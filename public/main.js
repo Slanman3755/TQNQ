@@ -161,7 +161,10 @@ $('.restart').click(function() {
 drawBoard();
 
 socket = io.connect();
-
+socket.on('con', function(data) {
+    restart();
+    socket.emit('restart', {game: game, color: userColor});
+});
 socket.on('update', function(data) {
 	update(data);
 });

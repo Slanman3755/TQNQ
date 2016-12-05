@@ -28,7 +28,7 @@ games = [];
 
 io.sockets.on('connection', function (socket) {
 	console.log('Connected');
-
+    socket.emit('con', 0);
 	socket.on('restart', function (data) {
     	console.log('Restart');
 
