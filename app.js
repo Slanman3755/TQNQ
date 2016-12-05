@@ -53,10 +53,10 @@ io.sockets.on('connection', function (socket) {
 
 	socket.on('move', function (data) {
     	console.log('Move');
-    	
-    	if (this.id != (games[data.game].turn == R ? games[data.game].red : games[data.game].black )) {
-    		console.log('Invalid');
-    		io.to(data.game).emit('update', games[data.game]);
+
+    	if (this.id != (games[data.game].turn == R ? games[data.game].red : games[data.game].black)) {
+    		console.log('Invalid Player');
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
     		return;
     	}
 
@@ -64,9 +64,57 @@ io.sockets.on('connection', function (socket) {
 
     	var row = data.row;
     	var col = data.col;
+    	var oldRow = data.oldRow;
+    	var oldCol = data.oldCol;
 
-    	board[row][col] = board[data.oldRow][data.oldCol];
-		board[data.oldRow][data.oldCol] = E;
+    	if (board[oldRow][oldCol] != games[data.game].turn) {
+    		console.log('Invalid Piece');
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+    		return;
+    	}
+
+    	var check = false;
+
+    	for (var i = 1; !check && (oldRow + i) < 5 && (oldCol + i) < 5 && board[oldRow + i][oldCol + i] == E; i++) {
+			check = oldRow + i == row && oldCol + i == col;
+		}
+
+		for (var i = 1; !check && (oldRow + i) < 5 && board[oldRow + i][oldCol] == E; i++) {
+			check = oldRow + i == row && oldCol == col;
+		}
+
+		for (var i = 1; !check && (oldRow + i) < 5 && (oldCol - i) >= 0 && board[oldRow + i][oldCol - i] == E; i++) {
+			check = oldRow + i == row && oldCol - i == col;
+		}
+
+		for (var i = 1; !check && (oldCol + i) < 5 && board[oldRow][oldCol + i] == E; i++) {
+			check = oldRow == row && oldCol + i == col;
+		}
+
+		for (var i = 1; !check && (oldCol - i) >= 0 && board[oldRow][oldCol - i] == E; i++) {
+			check = oldRow == row && oldCol - i == col;
+		}
+
+		for (var i = 1; !check && (oldRow - i) >=0 && (oldCol + i) < 5 && board[oldRow - i][oldCol + i] == E; i++) {
+			check = oldRow - i == row && oldCol + i == col;
+		}
+
+		for (var i = 1; !check && (oldRow - i) >= 0 && board[oldRow - i][oldCol] == E; i++) {
+			check = oldRow - i == row && oldCol == col;
+		}
+
+		for (var i = 1; !check && (oldRow - i) >= 0 && (oldCol - i) >= 0 && board[oldRow - i][oldCol - i] == E; i++) {
+			check = oldRow - i == row && oldCol - i == col;
+		}
+
+		if (!check) {
+    		console.log('Invalid Move');
+    		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
+    		return;
+    	}
+
+    	board[row][col] = board[oldRow][oldCol];
+		board[oldRow][oldCol] = E;
 
     	var color = board[data.row][data.col];
 		var score = [1, 1, 1, 1];
@@ -107,7 +155,7 @@ io.sockets.on('connection', function (socket) {
 
 		games[data.game].turn = games[data.game].turn == R ? B : R;
 
-		io.to(data.game).emit('update', games[data.game]);
+		io.to(data.game).emit('update', {board: games[data.game].board, turn: games[data.game].turn, win: games[data.game].win});
 	});
 });
 
