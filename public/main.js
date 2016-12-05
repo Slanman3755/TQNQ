@@ -181,3 +181,5 @@ $('.restart').click(function() {
 });
 
 drawBoard();
+
+var socket = io.connect();
